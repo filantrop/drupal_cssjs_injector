@@ -1,0 +1,4 @@
+name = Cssjs injector
+description = "css and js injector in same module"
+core = 7.x
+files[] = cssjs_injector.module
