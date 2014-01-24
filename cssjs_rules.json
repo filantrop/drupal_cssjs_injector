@@ -1,0 +1,13 @@
+{
+	"rules": [
+		{
+			"name": "Dölj visa filter",
+			"admin_description": "En knapp skapa som gör så att man visa och dölja ett eventuellt filter",
+			"pathrule": ["tidrapport","tidrapport/*"],
+			"files": [
+				{"name": "css/test.css","type":"css"},
+				{"name": "js/test.js","type":"js"}}
+			]
+		}
+	]
+}
