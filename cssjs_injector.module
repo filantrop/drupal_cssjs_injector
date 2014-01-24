@@ -18,10 +18,17 @@ function cssjs_injector_init() {
 
 function cssjs_injector_loadrules() {
 	
+	dirname(__FILE__)
+	
+	//file_get_contents(getcwd().
+	$rulescontent = file_get_contents("cssjs_rules.json");
 	//$object = json_decode(json_encode($array), FALSE);
 	//drupal_get_path('module', 'name_of_module');
+	$ruleobject = json_decode($rulescontent, FALSE);
 	
-	return array("test");
+	
+	return $ruleobject;
 
 }
 ?>
+
