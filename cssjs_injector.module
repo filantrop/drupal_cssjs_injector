@@ -18,14 +18,27 @@ function cssjs_injector_init() {
 
 function cssjs_injector_loadrules() {
 	
-	dirname(__FILE__)
-	
+//	dirname(__FILE__)
+
 	//file_get_contents(getcwd().
-	$rulescontent = file_get_contents("cssjs_rules.json");
+    $boolarray = Array(false => 'false', true => 'true');
+
+    echo getcwd();
+
+    $rulepath = getcwd()."/cssjs_rules.json";
+    echo "rulepath: ".$rulepath;
+
+    $exists = file_exists($rulepath);
+    echo "fileexitst: ".$boolarray[$exists]."\n";
+
+	$rulescontent = file_get_contents(getcwd()."/cssjs_rules.json");
+
+    echo $rulescontent;
 	//$object = json_decode(json_encode($array), FALSE);
 	//drupal_get_path('module', 'name_of_module');
 	$ruleobject = json_decode($rulescontent, FALSE);
 	
+
 	
 	return $ruleobject;
 
