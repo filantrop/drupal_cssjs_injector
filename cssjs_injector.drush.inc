@@ -31,7 +31,7 @@ function drush_cssjs_injector_cssjs_viewrules($filter = NULL) {
   }
   else {
 	
-	drush_print(cssjs_injector_loadrules());
+	drush_print(print_r(cssjs_injector_loadrules()));
   
   }
  
