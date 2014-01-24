@@ -16,7 +16,7 @@ function cssjs_injector_init() {
 	}
 }
 
-function loadrules() {
+function cssjs_injector_loadrules() {
 	
 	//$object = json_decode(json_encode($array), FALSE);
 	drupal_get_path('module', 'name_of_module');
