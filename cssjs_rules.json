@@ -1,20 +1,20 @@
 {
     "rules": [  
         {
-            "name": "Hide show filter",
+            "title": "Hide show filter",
             "admin_description": "A button is created that you can show and hide filter on admin pages on",
             "pathrule": ["tidrapport","tidrapport/*"],
             "files": [
-                {"name": "css/test.css","type":"css"},
-                {"name": "js/test.js", "type": "js"}
+                {"path": "cssjs_injector/css/test.css","type":"css","media":"all"},
+                {"path": "cssjs_injector/js/test.js", "type": "js","position":"footer"}
              ]
         },
         {
-            "name": "Test",
+            "title": "Test",
             "admin_description": "Test description",
             "pathrule": ["test","test/*"],
             "files": [
-                 {"name": "css/test1.css", "type": "css"}
+                 {"path": "cssjs_injector/css/test1.css", "type": "css","media":"all"}
 
             ]
         }

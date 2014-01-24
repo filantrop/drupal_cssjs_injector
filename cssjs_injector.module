@@ -43,9 +43,96 @@ function cssjs_injector_loadrules() {
 
 }
 
-function cssjs_injector_initrule() {
+function cssjs_injector_initrule($rule) {
+	
+	$cssindex = 0;
+	$jsindex = 0;
+	foreach($rule->files as $file){
+		
+		if($file->type == "css"){
+			cssjs_injector_loadcss_rule($rule, $file,$cssindex++);
+		}
+		else if($file->type == "js") {
+			cssjs_injector_loadjs_rule($rule, $file,$jsindex++);		
+		}	
+	}
+}
+
+function cssjs_injector_loadcss_rule($rule, $file,$fileindex){
+	
+	foreach($rule->pathrule as $pathrule){
+	    if (cssjs_evaluate_rule($pathrule, $file)) {
+			
+			cssjs_injector_addcss($pathrule, $file, $fileindex);
+		}	
+	}
+}
+
+function cssjs_injector_addcss($rule, $file,fileindex) {
+
+	
+	$file_uri = cssjs_injector_uri($file->path);	
+
+	switch ($css_rule['media']) {
+		case 'all':
+		case 'screen':
+		case 'print':
+		  drupal_add_css($file_uri, array('type' => 'file','group' => CSS_THEME,'media' => $file->media));
+		  break;
+
+		case 'IE 7':
+		case 'IE 8':
+		case 'IE 9':
+		  drupal_add_css($file_uri, array(
+			'group' => CSS_THEME,
+			'browsers' => array('IE' => $path->media, '!IE' => FALSE),		
+		  );
+		  break;
+	  }
+}
 
 
+
+function cssjs_injector_loadjs_rule($rule, $file, $fileindex){
+
+	foreach($rule->pathrule as $pathrule){
+	    if (cssjs_evaluate_rule($pathrule, $file)) {
+			
+			cssjs_injector_addjs($rule, $pathrule);
+		}	
+	}
+}
+
+function cssjs_injector_addcss($rule, $file, $fileindex) {
+
+    // add the js
+    $file_uri = cssjs_injector_uri($file->path);
+    drupal_add_js($file_uri, array(
+      'type' => 'file',
+      'scope' => $rule->position,
+      // this group has the highest weight
+      'group' => JS_THEME,
+      'every_page' => FALSE,
+      // safe guard to ensure inline files are never preprocessed
+      //'preprocess' => $rule->inline == 1 ? FALSE : $rule->preprocess,
+      // since we're trying to give the administrator complete control, we'll
+      // move JS that this module has added to a high weight, higher even than
+      // the theme's JS files. Currently the weight is 200 + the crid, which is
+      // currently higher than Bartik's JS.
+      'weight' => 200 + $fileindex,
+    ));
+	
+}
+
+function cssjs_evaluate_rule($pathrule,$file) {
+
+
+
+}
+
+function cssjs_injector_uri($path){
+	$uri = 'public://' .$path;
+    return $uri;
 }
 
 

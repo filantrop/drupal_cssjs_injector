@@ -36,6 +36,8 @@ function drush_cssjs_injector_cssjs_viewrules($filter = NULL) {
     foreach($obj->rules as $rule) {
 
     	drush_print(serialize($rule)."\n");
+		
+		
 
     }     
   }
@@ -43,5 +45,7 @@ function drush_cssjs_injector_cssjs_viewrules($filter = NULL) {
   //log to the command line with an OK status
   drush_log('Shows defined cssjs-rules', 'ok');
 }
+
+
 
 ?>
