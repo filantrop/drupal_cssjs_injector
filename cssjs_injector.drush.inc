@@ -24,7 +24,7 @@ function cssjs_injector_drush_command() {
   return $items;
 }
 
-function drush_cssjs_injector_my_command($filter = NULL) {
+function drush_cssjs_injector_cssjs_viewrules($filter = NULL) {
   //check if the argument was passed in and just print it out
   if (isset($filter)) {
    drush_print($filter);
