@@ -3,7 +3,7 @@
         {
             "title": "Hide show filter",
             "admin_description": "A button is created that you can show and hide filter on admin pages on",
-            "pathrule": ["tidrapport","tidrapport/*"],
+            "pathrules": ["tidrapport","tidrapport/*"],
             "files": [
                 {"path": "cssjs_injector/css/test.css","type":"css","media":"all"},
                 {"path": "cssjs_injector/js/test.js", "type": "js","position":"footer"}
@@ -12,7 +12,7 @@
         {
             "title": "Test",
             "admin_description": "Test description",
-            "pathrule": ["test","test/*"],
+            "pathrules": ["test","test/*"],
             "files": [
                  {"path": "cssjs_injector/css/test1.css", "type": "css","media":"all"}
 

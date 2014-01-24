@@ -37,8 +37,6 @@ function cssjs_injector_loadrules() {
 	//drupal_get_path('module', 'name_of_module');
 	$ruleobject = json_decode($rulescontent, FALSE);
 	
-
-	
 	return $ruleobject;
 
 }
@@ -49,31 +47,27 @@ function cssjs_injector_initrule($rule) {
 	$jsindex = 0;
 	foreach($rule->files as $file){
 		
-		if($file->type == "css"){
-			cssjs_injector_loadcss_rule($rule, $file,$cssindex++);
+		$pathrulesstring = implode(" ",$rule->pathrules);
+	
+		// If rule evaluates, add file
+		if(cssjs_evaluate_rule($pathrulesstring, $file){	
+		
+			if($file->type == "css"){				
+				cssjs_injector_addcss($rule, $file,$cssindex++);
+			}
+			else if($file->type == "js") {
+				cssjs_injector_addjs($rule, $file,$jsindex++);		
+			}	
 		}
-		else if($file->type == "js") {
-			cssjs_injector_loadjs_rule($rule, $file,$jsindex++);		
-		}	
 	}
 }
 
-function cssjs_injector_loadcss_rule($rule, $file,$fileindex){
-	
-	foreach($rule->pathrule as $pathrule){
-	    if (cssjs_evaluate_rule($pathrule, $file)) {
-			
-			cssjs_injector_addcss($pathrule, $file, $fileindex);
-		}	
-	}
-}
+function cssjs_injector_addcss($rule, $file, fileindex) {
 
-function cssjs_injector_addcss($rule, $file,fileindex) {
-
-	
+	// Add the css-file
 	$file_uri = cssjs_injector_uri($file->path);	
 
-	switch ($css_rule['media']) {
+	switch ($file->media) {
 		case 'all':
 		case 'screen':
 		case 'print':
@@ -92,20 +86,9 @@ function cssjs_injector_addcss($rule, $file,fileindex) {
 }
 
 
-
-function cssjs_injector_loadjs_rule($rule, $file, $fileindex){
-
-	foreach($rule->pathrule as $pathrule){
-	    if (cssjs_evaluate_rule($pathrule, $file)) {
-			
-			cssjs_injector_addjs($rule, $pathrule);
-		}	
-	}
-}
-
 function cssjs_injector_addcss($rule, $file, $fileindex) {
 
-    // add the js
+    // Add the js-file
     $file_uri = cssjs_injector_uri($file->path);
     drupal_add_js($file_uri, array(
       'type' => 'file',
@@ -124,8 +107,13 @@ function cssjs_injector_addcss($rule, $file, $fileindex) {
 	
 }
 
-function cssjs_evaluate_rule($pathrule,$file) {
-
+function cssjs_evaluate_rule($pathrules,$file) {
+      $path = drupal_get_path_alias($_GET['q']);
+      // Compare with the internal and path alias (if any).
+      $page_match = drupal_match_path($path, $css_rule['rule_conditions']);
+      if ($path != $_GET['q']) {
+        $page_match = $page_match || drupal_match_path($_GET['q'], $css_rule['rule_conditions']);
+      }
 
 
 }
