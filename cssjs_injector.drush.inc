@@ -30,9 +30,14 @@ function drush_cssjs_injector_cssjs_viewrules($filter = NULL) {
    drush_print($filter);
   }
   else {
-	
-	drush_print(print_r(cssjs_injector_loadrules()));
-  
+
+    $obj = cssjs_injector_loadrules();
+    
+    foreach($obj->rules as $rule) {
+
+    	drush_print(serialize($rule)."\n");
+
+    }     
   }
  
   //log to the command line with an OK status

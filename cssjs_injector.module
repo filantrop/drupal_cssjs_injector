@@ -18,20 +18,19 @@ function cssjs_injector_init() {
 
 function cssjs_injector_loadrules() {
 	
-//	dirname(__FILE__)
+	$cwd = dirname(__FILE__);
 
 	//file_get_contents(getcwd().
     $boolarray = Array(false => 'false', true => 'true');
 
-    echo getcwd();
 
-    $rulepath = getcwd()."/cssjs_rules.json";
-    echo "rulepath: ".$rulepath;
+    $rulepath = $cwd."/cssjs_rules.json";
+    echo "rulepath: ".$rulepath."\n";
 
     $exists = file_exists($rulepath);
     echo "fileexitst: ".$boolarray[$exists]."\n";
 
-	$rulescontent = file_get_contents(getcwd()."/cssjs_rules.json");
+	$rulescontent = file_get_contents($cwd."/cssjs_rules.json");
 
     echo $rulescontent;
 	//$object = json_decode(json_encode($array), FALSE);
@@ -43,5 +42,12 @@ function cssjs_injector_loadrules() {
 	return $ruleobject;
 
 }
+
+function cssjs_injector_initrule() {
+
+
+}
+
+
 ?>
 
