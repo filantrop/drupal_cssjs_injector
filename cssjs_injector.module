@@ -48,10 +48,10 @@ function cssjs_injector_initrule($rule) {
     //echo serialize($rule);
 	foreach($rule->files as $file){
 		
-		$pathrulesstring = implode(" ",$rule->pathrules);
+		$pathrulesstring = implode("\n",$rule->pathrules);
 	
 		// If rule evaluates, add file
-		if(true /*cssjs_evaluate_rule($pathrulesstring, $file)*/){	
+		if(cssjs_evaluate_rule($pathrulesstring, $file)){	
 		
 			if($file->type == "css"){				
 				cssjs_injector_addcss($rule, $file,$cssindex++);
@@ -65,6 +65,7 @@ function cssjs_injector_initrule($rule) {
 
 function cssjs_injector_addcss($rule, $file, $fileindex) {
 
+    //echo serialize($file);
 	// Add the css-file
 	$file_uri = cssjs_injector_uri($file->path);	
 
@@ -89,8 +90,6 @@ function cssjs_injector_addcss($rule, $file, $fileindex) {
 
 function cssjs_injector_addjs($rule, $file, $fileindex) {
 
-    echo serialize($rule);
-
     // Add the js-file
     $file_uri = cssjs_injector_uri($file->path);
     drupal_add_js($file_uri, array(
@@ -112,13 +111,17 @@ function cssjs_injector_addjs($rule, $file, $fileindex) {
 
 function cssjs_evaluate_rule($pathrules,$file) {
       $path = drupal_get_path_alias($_GET['q']);
+
+      //echo "path: ".$path."  pathrules: ".$pathrules."\n";
       // Compare with the internal and path alias (if any).
-      $page_match = drupal_match_path($path, $css_rule['rule_conditions']);
+      $page_match = drupal_match_path($path, $pathrules);
+
+      echo "page_match: ".(($page_match)?'true':'false')."\n";
       if ($path != $_GET['q']) {
-        $page_match = $page_match || drupal_match_path($_GET['q'], $css_rule['rule_conditions']);
+        $page_match = $page_match || drupal_match_path($_GET['q'], $pathrules);
       }
 
-
+      return $page_match;
 }
 
 function cssjs_injector_uri($path){
