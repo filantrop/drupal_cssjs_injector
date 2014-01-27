@@ -5,14 +5,11 @@
 *  Created by Andreas Sateras
 */
 function cssjs_injector_init() {
+    //dpm("cssjs_init");	
+	$ruleobject = cssjs_injector_loadrules();
 	
-	$rules = cssjs_injector_loadrules();
-	
-	foreach($rules as $rules) {
-		
-	
-	
-	
+	foreach($ruleobject->rules as $rule) {
+        cssjs_injector_initrule($rule);   
 	}
 }
 
@@ -25,32 +22,36 @@ function cssjs_injector_loadrules() {
 
 
     $rulepath = $cwd."/cssjs_rules.json";
-    echo "rulepath: ".$rulepath."\n";
+    //echo "rulepath: ".$rulepath."\n";
 
     $exists = file_exists($rulepath);
-    echo "fileexitst: ".$boolarray[$exists]."\n";
+    //echo "fileexitst: ".$boolarray[$exists]."\n";
 
 	$rulescontent = file_get_contents($cwd."/cssjs_rules.json");
 
-    echo $rulescontent;
+    //echo $rulescontent;
 	//$object = json_decode(json_encode($array), FALSE);
 	//drupal_get_path('module', 'name_of_module');
 	$ruleobject = json_decode($rulescontent, FALSE);
 	
+   // print_r(serialize($ruleobject));
 	return $ruleobject;
 
 }
 
 function cssjs_injector_initrule($rule) {
-	
+
+    //echo $rule->title;
 	$cssindex = 0;
 	$jsindex = 0;
+
+    //echo serialize($rule);
 	foreach($rule->files as $file){
 		
 		$pathrulesstring = implode(" ",$rule->pathrules);
 	
 		// If rule evaluates, add file
-		if(cssjs_evaluate_rule($pathrulesstring, $file){	
+		if(true /*cssjs_evaluate_rule($pathrulesstring, $file)*/){	
 		
 			if($file->type == "css"){				
 				cssjs_injector_addcss($rule, $file,$cssindex++);
@@ -62,7 +63,7 @@ function cssjs_injector_initrule($rule) {
 	}
 }
 
-function cssjs_injector_addcss($rule, $file, fileindex) {
+function cssjs_injector_addcss($rule, $file, $fileindex) {
 
 	// Add the css-file
 	$file_uri = cssjs_injector_uri($file->path);	
@@ -80,19 +81,21 @@ function cssjs_injector_addcss($rule, $file, fileindex) {
 		  drupal_add_css($file_uri, array(
 			'group' => CSS_THEME,
 			'browsers' => array('IE' => $path->media, '!IE' => FALSE),		
-		  );
+		  ));
 		  break;
 	  }
 }
 
 
-function cssjs_injector_addcss($rule, $file, $fileindex) {
+function cssjs_injector_addjs($rule, $file, $fileindex) {
+
+    echo serialize($rule);
 
     // Add the js-file
     $file_uri = cssjs_injector_uri($file->path);
     drupal_add_js($file_uri, array(
       'type' => 'file',
-      'scope' => $rule->position,
+      'scope' => $file->position,
       // this group has the highest weight
       'group' => JS_THEME,
       'every_page' => FALSE,
@@ -119,7 +122,7 @@ function cssjs_evaluate_rule($pathrules,$file) {
 }
 
 function cssjs_injector_uri($path){
-	$uri = 'public://' .$path;
+	$uri = $path;
     return $uri;
 }
 

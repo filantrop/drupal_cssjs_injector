@@ -3,10 +3,10 @@
         {
             "title": "Hide show filter",
             "admin_description": "A button is created that you can show and hide filter on admin pages on",
-            "pathrules": ["tidrapport","tidrapport/*"],
+            "pathrules": ["v","v/*"],
             "files": [
-                {"path": "cssjs_injector/css/test.css","type":"css","media":"all"},
-                {"path": "cssjs_injector/js/test.js", "type": "js","position":"footer"}
+                {"path": "/sites/all/modules/cssjs_injector/css/hide-show-filter.css","type":"css","media":"all"},
+                {"path": "/sites/all/modules/cssjs_injector/js/hide-show-filter.js", "type": "js","position":"footer"}
              ]
         },
         {
@@ -14,7 +14,7 @@
             "admin_description": "Test description",
             "pathrules": ["test","test/*"],
             "files": [
-                 {"path": "cssjs_injector/css/test1.css", "type": "css","media":"all"}
+                 {"path": "/sites/all/modules/cssjs_injector/css/hide-show-filter.css", "type": "css","media":"all"}
 
             ]
         }
