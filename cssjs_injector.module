@@ -116,7 +116,7 @@ function cssjs_evaluate_rule($pathrules,$file) {
       // Compare with the internal and path alias (if any).
       $page_match = drupal_match_path($path, $pathrules);
 
-      echo "page_match: ".(($page_match)?'true':'false')."\n";
+      //echo "page_match: ".(($page_match)?'true':'false')."\n";
       if ($path != $_GET['q']) {
         $page_match = $page_match || drupal_match_path($_GET['q'], $pathrules);
       }
