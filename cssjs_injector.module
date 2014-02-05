@@ -4,48 +4,60 @@
 *  Fromea AB - cssjs_injector
 *  Created by Andreas Sateras
 */
+
 function cssjs_injector_init() {
     //dpm("cssjs_init");	
-	$ruleobject = cssjs_injector_loadrules();
+
+    
+    $jsonpaths  =  variable_get('cssjs_jsonpaths');
+    cssjs_log("cssjs injector","Variable cssjs_jsonpaths: @jsonpaths",array('@jsonpaths'=>$jsonpaths),WATCHDOG_DEBUG);
+
+    if(isset($jsonpaths)==false)
+        return;
+
+    $jsonpathsarray = explode(' ',$jsonpaths);
+    
+
+    foreach($jsonpathsarray as $jsonpath) {
+        
+    	$ruleobject = cssjs_injector_loadrules($jsonpath);
 	
-	foreach($ruleobject->rules as $rule) {
-        cssjs_injector_initrule($rule);   
-	}
+	    foreach($ruleobject->rules as $rule) {
+            cssjs_injector_initrule($rule);   
+       	}
+    }
 }
 
-function cssjs_injector_loadrules() {
+function cssjs_injector_loadrules($jsonpath) {
 	
 	$cwd = dirname(__FILE__);
 
-	//file_get_contents(getcwd().
-    $boolarray = Array(false => 'false', true => 'true');
 
+    $exists = file_exists($jsonpath);
+    if($exists == false) {
+      cssjs_log('cssjs injector', "file does not exist: @jsonpath", array('@jsonpath'=>$jsonpath), WATCHDOG_ALERT) ;
+      return false;
+    }
 
-    $rulepath = $cwd."/cssjs_rules.json";
-    //echo "rulepath: ".$rulepath."\n";
+    $rulescontent = file_get_contents($jsonpath);
 
-    $exists = file_exists($rulepath);
-    //echo "fileexitst: ".$boolarray[$exists]."\n";
-
-	$rulescontent = file_get_contents($cwd."/cssjs_rules.json");
-
-    //echo $rulescontent;
-	//$object = json_decode(json_encode($array), FALSE);
-	//drupal_get_path('module', 'name_of_module');
+    cssjs_log('cssjs injector', "content of file @jsonpath is <br/> @rulescontent",array('@jsonpath'=> $jsonpath,'@rulescontent'=>$rulescontent),WATCHDOG_NOTICE);
+ 
 	$ruleobject = json_decode($rulescontent, FALSE);
 	
-   // print_r(serialize($ruleobject));
+
+    cssjs_log('cssjs injector', 'Serialized content of json file: @jsonpath is <br/> @ruleobject',array('@jsonpath'=>$jsonpath,'@ruleobject'=>print_r(serialize($ruleobject),true)),WATCHDOG_INFO);
 	return $ruleobject;
 
 }
 
 function cssjs_injector_initrule($rule) {
 
-    //echo $rule->title;
 	$cssindex = 0;
 	$jsindex = 0;
 
-    //echo serialize($rule);
+    cssjs_log('cssjs injector', 'cssjs_injector_initrule(...)<br/>@rule',array('@rule'=>serialize($rule)),WATCHDOG_INFO);
+
 	foreach($rule->files as $file){
 		
 		$pathrulesstring = implode("\n",$rule->pathrules);
@@ -65,7 +77,6 @@ function cssjs_injector_initrule($rule) {
 
 function cssjs_injector_addcss($rule, $file, $fileindex) {
 
-    //echo serialize($file);
 	// Add the css-file
 	$file_uri = cssjs_injector_uri($file->path);	
 
@@ -112,11 +123,9 @@ function cssjs_injector_addjs($rule, $file, $fileindex) {
 function cssjs_evaluate_rule($pathrules,$file) {
       $path = drupal_get_path_alias($_GET['q']);
 
-      //echo "path: ".$path."  pathrules: ".$pathrules."\n";
       // Compare with the internal and path alias (if any).
       $page_match = drupal_match_path($path, $pathrules);
 
-      //echo "page_match: ".(($page_match)?'true':'false')."\n";
       if ($path != $_GET['q']) {
         $page_match = $page_match || drupal_match_path($_GET['q'], $pathrules);
       }
@@ -129,6 +138,12 @@ function cssjs_injector_uri($path){
     return $uri;
 }
 
+function cssjs_log($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = null) {
 
+   $error_level = variable_get('error_level');
+    if( $error_level == 2 || $error_level == 1 &&  $severity <= WATCHDOG_WARNING) {
+        watchdog($type,$message, $variables, $severity, $link);
+    }
+}
 ?>
 
