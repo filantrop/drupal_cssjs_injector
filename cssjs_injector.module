@@ -6,14 +6,15 @@
 */
 
 function cssjs_injector_init() {
-    //dpm("cssjs_init");	
-
     
     $jsonpaths  =  variable_get('cssjs_jsonpaths');
-    cssjs_log("cssjs injector","Variable cssjs_jsonpaths: @jsonpaths",array('@jsonpaths'=>$jsonpaths),WATCHDOG_DEBUG);
+    cssjs_log("Variable cssjs_jsonpaths: @jsonpaths",array('@jsonpaths'=>$jsonpaths),WATCHDOG_DEBUG);
 
     if(isset($jsonpaths)==false)
+    {
+        cssjs_log("The variable cssjs_jsonpaths is not set",array(),WATCHDOG_ERROR);
         return;
+    }
 
     $jsonpathsarray = explode(' ',$jsonpaths);
     
@@ -30,23 +31,20 @@ function cssjs_injector_init() {
 
 function cssjs_injector_loadrules($jsonpath) {
 	
-	$cwd = dirname(__FILE__);
-
-
     $exists = file_exists($jsonpath);
     if($exists == false) {
-      cssjs_log('cssjs injector', "file does not exist: @jsonpath", array('@jsonpath'=>$jsonpath), WATCHDOG_ALERT) ;
+      cssjs_log("file does not exist: @jsonpath", array('@jsonpath'=>$jsonpath), WATCHDOG_ALERT) ;
       return false;
     }
 
     $rulescontent = file_get_contents($jsonpath);
 
-    cssjs_log('cssjs injector', "content of file @jsonpath is <br/> @rulescontent",array('@jsonpath'=> $jsonpath,'@rulescontent'=>$rulescontent),WATCHDOG_NOTICE);
+    cssjs_log("content of file @jsonpath is <br/> @rulescontent",array('@jsonpath'=> $jsonpath,'@rulescontent'=>$rulescontent),WATCHDOG_NOTICE);
  
 	$ruleobject = json_decode($rulescontent, FALSE);
 	
 
-    cssjs_log('cssjs injector', 'Serialized content of json file: @jsonpath is <br/> @ruleobject',array('@jsonpath'=>$jsonpath,'@ruleobject'=>print_r(serialize($ruleobject),true)),WATCHDOG_INFO);
+    cssjs_log('Serialized content of json file: @jsonpath is <br/> @ruleobject',array('@jsonpath'=>$jsonpath,'@ruleobject'=>print_r(serialize($ruleobject),true)),WATCHDOG_INFO);
 	return $ruleobject;
 
 }
@@ -56,7 +54,7 @@ function cssjs_injector_initrule($rule) {
 	$cssindex = 0;
 	$jsindex = 0;
 
-    cssjs_log('cssjs injector', 'cssjs_injector_initrule(...)<br/>@rule',array('@rule'=>serialize($rule)),WATCHDOG_INFO);
+    cssjs_log('cssjs_injector_initrule(...)<br/>@rule',array('@rule'=>serialize($rule)),WATCHDOG_INFO);
 
 	foreach($rule->files as $file){
 		
@@ -138,11 +136,11 @@ function cssjs_injector_uri($path){
     return $uri;
 }
 
-function cssjs_log($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = null) {
+function cssjs_log($message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = null) {
 
    $error_level = variable_get('error_level');
     if( $error_level == 2 || $error_level == 1 &&  $severity <= WATCHDOG_WARNING) {
-        watchdog($type,$message, $variables, $severity, $link);
+        watchdog('cssjs injector',$type,$message, $variables, $severity, $link);
     }
 }
 ?>
