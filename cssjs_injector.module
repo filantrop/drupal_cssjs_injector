@@ -8,6 +8,8 @@
 function cssjs_injector_init() {
     
     $jsonpaths  =  variable_get('cssjs_jsonpaths');
+
+
     cssjs_log("Variable cssjs_jsonpaths: @jsonpaths",array('@jsonpaths'=>$jsonpaths),WATCHDOG_DEBUG);
 
     if(isset($jsonpaths)==false)
@@ -140,7 +142,9 @@ function cssjs_log($message, $variables = array(), $severity = WATCHDOG_NOTICE, 
 
    $error_level = variable_get('error_level');
     if( $error_level == 2 || $error_level == 1 &&  $severity <= WATCHDOG_WARNING) {
-        watchdog('cssjs injector',$type,$message, $variables, $severity, $link);
+
+        echo "test";
+        watchdog('cssjs injetor',$message, $variables, $severity, $link);
     }
 }
 ?>
