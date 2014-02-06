@@ -4,12 +4,52 @@
 *  Fromea AB - cssjs_injector
 *  Created by Andreas Sateras
 */
+/*
+    Version. 7-x 0.1
+
+    This is a module of the two combined modules css_injector and js_injector. 
+    I wrote it because of the disadvantage that often css files and js files is sharing the same pathrules when used on a website, and with a rulesfile it's easier to versioncontroll the rules.
+    One more advantage is that with multiple rulefiles it's possible to use one or more rule file for multisitepurposes.
+
+    The jsonfile could possibly be handled in an UI, but is not done at the moment.
+
+
+    The rules files of this module is defined in the variable 'cssjs_jsonpath'. 
+    Either set it from drush with drush vset cssjs_jsonpath E.g. with two files "/drupal/www/global/cssjs.json /drupal/www/public_html/sites/default/cssjs.json".
+    The rulepaths should be defined with a space between them.
+
+    Below is an example of a file with defined rules.
+
+{
+    "rules": [
+        {
+            "title": "Hide show filter",
+            "admin_description": "A button is created that you can show and hide filter on admin pages on",
+            "pathrules": ["foo","foo/*"],
+            "files": [
+                {"path": "sites/all/files/css/hide-show-filter.css","type":"css","media":"all"},
+                {"path": "sites/all/files/js/hide-show-filter.js", "type": "js","position":"footer"}
+            ]
+        },
+        {
+             "title": "Show cycling image ",
+             "admin_description": "Test description",
+             "pathrules": ["<front>","/node/42"],
+             "files": [
+                {"path": "sites/all/files/css/showcycling.css", "type": "css","media":"all"}
+            ]
+        }
+    ]
+}
+
+
+*/
 function cssjs_injector_variable_info($options) {
     $variables['cssjs_jsonpaths'] = array(
         'title' => t('CSSJs injector jsonfile paths'),
         'type' => 'text',
         'group' => 'CSSJS Injector',
-        'description' => t('Css and Javascript Json rulesfiles that describes which css and js-files that should be included on the website. Should contain absolute paths separated by spaces'),
+        'description' => t('Css and Javascript Json rulesfiles that describes which css and js-files that should be included on the website. Should contain absolute paths separated by spaces<br/>see readme file for example.'),
         'required' => FALSE
     );
 
@@ -122,9 +162,7 @@ function cssjs_injector_addjs($rule, $file, $fileindex) {
       // this group has the highest weight
       'group' => JS_THEME,
       'every_page' => FALSE,
-      // safe guard to ensure inline files are never preprocessed
-      //'preprocess' => $rule->inline == 1 ? FALSE : $rule->preprocess,
-      // since we're trying to give the administrator complete control, we'll
+      // Since we're trying to give the administrator complete control, we'll
       // move JS that this module has added to a high weight, higher even than
       // the theme's JS files. Currently the weight is 200 + the crid, which is
       // currently higher than Bartik's JS.
