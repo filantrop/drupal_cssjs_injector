@@ -4,7 +4,20 @@
 *  Fromea AB - cssjs_injector
 *  Created by Andreas Sateras
 */
+function cssjs_injector_variable_info($options) {
+    $variables['cssjs_jsonpaths'] = array(
+        'title' => t('CSSJs injector jsonfile paths'),
+        'type' => 'text',
+        'group' => 'CSSJS Injector',
+        'description' => t('Css and Javascript Json rulesfiles that describes which css and js-files that should be included on the website. Should contain absolute paths separated by spaces'),
+        'required' => FALSE
+    );
 
+
+    return $variables;
+
+
+}
 function cssjs_injector_init() {
     
     $jsonpaths  =  variable_get('cssjs_jsonpaths');
@@ -142,8 +155,6 @@ function cssjs_log($message, $variables = array(), $severity = WATCHDOG_NOTICE, 
 
    $error_level = variable_get('error_level');
     if( $error_level == 2 || $error_level == 1 &&  $severity <= WATCHDOG_WARNING) {
-
-        echo "test";
         watchdog('cssjs injetor',$message, $variables, $severity, $link);
     }
 }
