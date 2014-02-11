@@ -45,27 +45,37 @@
 
 */
 function cssjs_injector_variable_info($options) {
-    $variables['cssjs_jsonpaths'] = array(
-        'title' => t('CSSJs injector jsonfile paths'),
+    $variables['cssjs_global_jsonpaths'] = array(
+        'title' => t('CSSJs injector global jsonfile paths'),
         'type' => 'text',
         'group' => 'CSSJS Injector',
         'description' => t('Css and Javascript Json rulesfiles that describes which css and js-files that should be included on the website. Should contain absolute paths separated by spaces<br/>see readme file for example.'),
         'required' => FALSE
     );
 
+    $variables['cssjs_site_jsonpaths'] = array(
+        'title' => t('CSSJs injector site jsonfile paths'),
+        'type' =>'text',
+        'group' => 'CSSJS Injector',
+        'description' => t('Css and Javascript sitespecifik Json rulesfilels that describes which css and js-file that should be included on the website. Should contain absolute paths separated by spaces<br/>see readme file for example.'),
+        'required' => FALSE
+    );
 
     return $variables;
 
 
 }
 function cssjs_injector_init() {
+   $global_jsonpaths = variable_get('cssjs_global_jsonpaths')==null?"":variable_get('cssjs_global_jsonpaths');
+
+   $site_jsonpaths = variable_get('cssjs_site_jsonpaths')==null?"":variable_get('cssjs_site_jsonpaths');
     
-    $jsonpaths  =  variable_get('cssjs_jsonpaths');
+    $jsonpaths  = $global_jsonpaths.$site_jsonpaths;
 
 
     cssjs_log("Variable cssjs_jsonpaths: @jsonpaths",array('@jsonpaths'=>$jsonpaths),WATCHDOG_DEBUG);
 
-    if(isset($jsonpaths)==false)
+    if($jsonpaths=="")
     {
         cssjs_log("The variable cssjs_jsonpaths is not set",array(),WATCHDOG_ERROR);
         return;
@@ -145,7 +155,7 @@ function cssjs_injector_addcss($rule, $file, $fileindex) {
 		case 'IE 9':
 		  drupal_add_css($file_uri, array(
 			'group' => CSS_THEME,
-			'browsers' => array('IE' => $path->media, '!IE' => FALSE),		
+			'browsers' => array('IE' => $file->media, '!IE' => FALSE),
 		  ));
 		  break;
 	  }
